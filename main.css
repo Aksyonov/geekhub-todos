@@ -53,6 +53,7 @@ button:active {
 input[type=text] {
   z-index:10;
   outline:none;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   height: 32px;
   width: 100%;
@@ -60,4 +61,12 @@ input[type=text] {
   border-radius: 16px;
   padding-left: 8px;
   padding-right: 32px;
+}
+input[type=color] {
+  float:right;
+  width: 32px;
+  border: none;
+  background: transparent;
+  margin-right: 8px;
+  margin-top: 1px;
 }

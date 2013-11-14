@@ -2,7 +2,7 @@
   'use strict';
   function append(item) {
     var li = document.createElement('li');
-    li.innerHTML = '<input type="checkbox"> <span></span><input type="color"/>';
+    li.innerHTML = itemTpl;
     li.querySelector('span').textContent = item.text;
     li.querySelector('input[type=checkbox]').checked = item.checked;
     li.querySelector('input[type=color]').value = item.color;
@@ -10,7 +10,6 @@
     itemList.appendChild(li);
     return li;
   }
-
 
   function addItem() {
     var item = {
@@ -36,6 +35,8 @@
 
   var itemList = document.querySelector('#item-list');
   var label = document.querySelector('#label');
+  var itemTpl = '<input type="checkbox"> <span></span>' +
+    '<button class="remove">&times;</button><input type="color"/>';
   var list = localStorage['list'] ? JSON.parse(localStorage['list']) : [];
 
   list.forEach(function (item) {
@@ -82,5 +83,17 @@
       });
     }
     saveList();
+  });
+  itemList.addEventListener('click', function (event) {
+    if (event.target.classList.contains('remove')) {
+      var li = event.target.parentNode;
+      list.some(function (item, id) {
+        if (item.node !== li) return false;
+        list.splice(id, 1);
+        itemList.removeChild(li);
+        return true;
+      });
+      saveList();
+    }
   });
 })();

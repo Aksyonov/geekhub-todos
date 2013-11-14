@@ -67,6 +67,12 @@ input[type=color] {
   width: 32px;
   border: none;
   background: transparent;
-  margin-right: 8px;
   margin-top: 1px;
+}
+button.remove {
+  float: right;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
 }

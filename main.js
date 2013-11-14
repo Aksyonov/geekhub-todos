@@ -3,19 +3,20 @@
   function append(item) {
     var li = document.createElement('li');
     li.innerHTML = '<input type="checkbox"> <span></span><input type="color"/>';
-    li.querySelector('span').innerText = item.text;
+    li.querySelector('span').textContent = item.text;
     li.querySelector('input[type=checkbox]').checked = item.checked;
     li.querySelector('input[type=color]').value = item.color;
-    li.style.background = item.color;
+    li.style.backgroundColor = item.color;
     itemList.appendChild(li);
     return li;
   }
+
 
   function addItem() {
     var item = {
       text: label.value,
       checked: false,
-      color: 'white'
+      color: ''
     };
     item.node = append(item);
     list.push(item);
@@ -68,7 +69,7 @@
       var status = event.target.checked;
       list.some(function (item) {
         if (item.node !== li) return false;
-        item.status = status;
+        item.checked = status;
         return true;
       });
     } else if (event.target.type === 'color') {
@@ -76,7 +77,7 @@
       list.some(function (item) {
         if (item.node !== li) return false;
         item.color = color;
-        li.style.background = color;
+        li.style.backgroundColor = color;
         return true;
       });
     }

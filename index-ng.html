@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="todo">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body ng-controller="TodoCtrl">
+  <h1>ToDo</h1>
+  <ul id="item-list">
+    <li ng-repeat="(id, item) in list"
+        ng-style="{'background-color':item.color}">
+      <input type="checkbox" ng-model="item.checked">
+      <span ng-bind="item.text"></span>
+      <button class="remove" ng-click="removeItem(id)">&times;</button>
+      <input type="color" ng-model="item.color"/>
+    </li>
+  </ul>
+  <div class="control">
+    <input type="text" id="label" ng-model="todoText"
+           ng-keypress="inputKey($event, id)">
+    <button id="add-item" ng-click="addItem()">+</button>
+  </div>
+  <div class="control">
+    <button id="remove-items" ng-click="removeChecked()">
+      Remove all checked
+    </button>
+  </div>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -23,25 +23,54 @@
     saveList();
   }
 
+  function newList(arr) {
+    list = arr;
+    list.forEach(function (item) {
+      item.node = append(item);
+    });
+  }
+
+  function loadList() {
+    itemList.innerHTML = '';
+    if (storage === 'local') {
+      if (localStorage['todo-list']) {
+        newList(JSON.parse(localStorage['todo-list']));
+      }
+    } else if (storage === 'server') {
+      var request = new XMLHttpRequest();
+      request.addEventListener('load', function () {
+        newList(JSON.parse(this.responseText));
+      });
+      request.open('GET', 'http://localhost:1337/');
+      request.send();
+    }
+  }
+
   function saveList() {
-    localStorage['list'] = JSON.stringify(list.map(function (item) {
+    var newList = list.map(function (item) {
       return {
         text: item.text,
         checked: item.checked,
         color: item.color
       }
-    }));
+    });
+    if (storage === 'local') {
+      localStorage['todo-list'] = JSON.stringify(newList);
+    } else if (storage === 'server') {
+      var request = new XMLHttpRequest();
+      request.open('POST', 'http://localhost:1337/');
+      request.send(JSON.stringify(newList));
+    }
   }
 
   var itemList = document.querySelector('#item-list');
   var label = document.querySelector('#label');
   var itemTpl = '<input type="checkbox"> <span></span>' +
     '<button class="remove">&times;</button><input type="color"/>';
-  var list = localStorage['list'] ? JSON.parse(localStorage['list']) : [];
+  var storage = 'local';
+  var list = [];
 
-  list.forEach(function (item) {
-    item.node = append(item);
-  });
+  loadList();
 
   document.querySelector('#add-item').addEventListener('click', addItem);
   label.addEventListener('keyup', function (event) {
@@ -95,5 +124,9 @@
       });
       saveList();
     }
+  });
+  document.querySelector('#storage').addEventListener('change', function (event) {
+    storage = event.target.value;
+    loadList();
   });
 })();

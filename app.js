@@ -24,9 +24,7 @@
         return !item.checked;
       });
     };
-    $scope.$watch(function () {
-      return $scope.list;
-    }, function () {
+    $scope.$watch('list', function () {
       localStorage['list'] = JSON.stringify(list.map(function (item) {
         return {
           text: item.text,

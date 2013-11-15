@@ -76,3 +76,6 @@ button.remove {
   background: transparent;
   border: none;
 }
+label {
+  white-space: nowrap;
+}

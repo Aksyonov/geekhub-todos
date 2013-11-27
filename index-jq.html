@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <h1>ToDo</h1>
+  <ul id="item-list">
+  </ul>
+  <div class="control">
+    <input type="text" id="label">
+    <button id="add-item">+</button>
+  </div>
+  <div class="control">
+    <button id="remove-items">Remove all checked</button>
+  </div>
+  <form id="storage" action="">
+      Storage engine:
+      <label><input type="radio" name="st" value="local" checked>LocalStorage</label>
+      <label><input type="radio" name="st" value="server">Server</label>
+  </form>
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="main-jq.js"></script>
+</body>
+</html>

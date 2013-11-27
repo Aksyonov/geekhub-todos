@@ -31,7 +31,7 @@ console.log('Server running at http://127.0.0.1:1337/');
 function getStore(name) {
     if(!stores[name]) {
         stores[name] = {
-            data: '[]',
+            data: '',
             type: 'text/plain'
         };
     }

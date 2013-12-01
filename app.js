@@ -1,8 +1,9 @@
 (function () {
   'use strict';
   var app = angular.module('todo', []);
-  app.service('Storage', function ($rootScope, $http){
+  app.service('Storage', function ($rootScope, $http, $timeout){
     var self = this;
+    var saveTimeout;
     this.list = [];
     this.engine = 'local';
     this.load = function(){
@@ -13,6 +14,9 @@
       } else if (this.engine === 'server'){
         $http.get('http://localhost:1337/').success(function(data) {
           self.list = data;
+          if (!Array.isArray(self.list)) {
+            self.list = [];
+          }
         });
       }
     };
@@ -29,7 +33,12 @@
       if (self.engine === 'local') {
         localStorage['todo-list'] = JSON.stringify(newList);
       } else if (self.engine === 'server'){
-        $http.post('http://localhost:1337/', JSON.stringify(newList));
+        if (saveTimeout) {
+          $timeout.cancel(saveTimeout);
+        }
+        saveTimeout = $timeout(function () {
+          $http.post('http://localhost:1337/', JSON.stringify(newList));
+        }, 500, false);
       }
     }, true);
   });

@@ -1,9 +1,9 @@
 (function () {
   'use strict';
   function append(item) {
-    var $li = $('<li><input type="checkbox"> <span></span>' +
-      '<button class="remove">&times;</button><input type="color"/></li>');
-    $li.find('span').text(item.text);
+    var $li = $('<li><input type="checkbox"> <input type="text"/> ' +
+      '<button class="remove">&times;</button> <input type="color"/></li>');
+    $li.find('input[type=text]').val(item.text);
     $li.find('input[type=checkbox]').attr("checked", item.checked);
     $li.find('input[type=color]').val(item.color);
     $li.css('background-color', item.color);
@@ -45,10 +45,10 @@
         type: 'GET',
         dataType: 'json'
       }).done(function (data) {
-        newList(data);
-      }).fail(function ($xhr, status, err) {
-        list = [];
-      });
+          newList(data);
+        }).fail(function ($xhr, status, err) {
+          list = [];
+        });
     }
   }
 
@@ -63,12 +63,15 @@
     if (storage === 'local') {
       localStorage['todo-list'] = JSON.stringify(newList);
     } else if (storage === 'server') {
-      $.ajax('http://localhost:1337/', {
-        type: 'POST',
-        data: JSON.stringify(newList)
-      }).fail(function($xhr, status, err) {
-        console.log('Failed to save', status, err);
-      });
+      if (saveTimeoutID) {
+        clearTimeout(saveTimeoutID);
+      }
+      saveTimeoutID = setTimeout(function () {
+        $.ajax('http://localhost:1337/', {
+          type: 'POST',
+          data: JSON.stringify(newList)
+        });
+      }, 500);
     }
   }
 
@@ -76,6 +79,7 @@
   var $label = $('#label');
   var storage = 'local';
   var list = [];
+  var saveTimeoutID;
 
   // the app starts
 
@@ -91,7 +95,7 @@
     list = list.filter(function (item) {
       return !item.checked;
     });
-    $ul.find('li>input:checked').each(function (){
+    $ul.find('li>input:checked').each(function () {
       $(this).parent().remove();
     });
     saveList();
@@ -126,6 +130,17 @@
       if (item.node !== $li[0]) return false;
       list.splice(id, 1);
       $li.remove();
+      return true;
+    });
+    saveList();
+  });
+  $ul.on('keyup', 'input[type=text]', function () {
+    var $this = $(this);
+    var $li = $this.parent();
+    var text = $this.val();
+    list.some(function (item) {
+      if (item.node !== $li[0]) return false;
+      item.text = text;
       return true;
     });
     saveList();
